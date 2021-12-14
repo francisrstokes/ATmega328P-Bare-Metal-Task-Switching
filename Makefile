@@ -13,7 +13,7 @@ RM_RF				:= rm -rf
 MKDIR				:= mkdir -p
 
 # Flags
-CCFLAGS			:= -Os -DF_CPU=16000000UL -mmcu=$(MCU)
+CCFLAGS			:= -Os -DF_CPU=16000000UL -DMT_ENABLED -mmcu=$(MCU) -ggdb
 LDFLAGS			:= -mmcu=$(MCU)
 OCFLAGS			:= -O ihex -R .eeprom
 INCLUDE			:= -I/usr/avr/include
