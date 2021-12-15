@@ -48,15 +48,15 @@ void MT_register_task(struct MT_TaskDefinition* task) {
   // first run. Here we make sure that the stack pointer is correctly offset, and that
   // the stack memory is zeroed out.
   if (MT_kernel.tasksRegistered > 0) {
-    MT_kernel.tasks[MT_kernel.tasksRegistered].sp -= 33;
-    for (uint16_t i = MT_kernel.nextStackAddress; i > MT_kernel.nextStackAddress - 33; i--) {
+    MT_kernel.tasks[MT_kernel.tasksRegistered].sp -= SAVED_STATE_SIZE;
+    for (uint16_t i = MT_kernel.nextStackAddress; i > MT_kernel.nextStackAddress - SAVED_STATE_SIZE; i--) {
       // Zero out the inital stack
       *(uint8_t*)(i) = 0;
     }
   }
 
   MT_kernel.tasksRegistered++;
-  MT_kernel.nextStackAddress -= task->stackSize;
+  MT_kernel.nextStackAddress -= task->stackSize + SAVED_STATE_SIZE;
 }
 
 // -DMT_ENABLED must be passed to gcc at compile time in order to register the interrupt handler

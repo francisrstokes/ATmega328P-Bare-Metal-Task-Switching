@@ -6,6 +6,7 @@
 #include <stdint-gcc.h>
 
 #define PANIC() while (1) {}
+#define SAVED_STATE_SIZE 33
 
 typedef void (*MT_TaskFn)();
 struct MT_TaskDefinition {
