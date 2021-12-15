@@ -9,10 +9,7 @@ void MT_kernel_init() {
   MT_kernel.activeTask = 0;
   MT_kernel.nextStackAddress = RAMEND;
 
-	TCNT1  = 16000;        // Trigger every millesecond
-  TCCR1A = 0x00;         // Config register
-  TCCR1B = (1 << CS10);  // No prescaler (run at 16MHz)
-  TIMSK1 = (1 << TOIE1); // Enable timer
+  WDTCSR = _BV(WDIE); // WDT Enabled, in interrupt mode, every 16ms
 }
 
 void MT_kernel_start() {
@@ -64,8 +61,8 @@ void MT_register_task(struct MT_TaskDefinition* task) {
 
 // -DMT_ENABLED must be passed to gcc at compile time in order to register the interrupt handler
 #ifdef MT_ENABLED
-void TIMER1_OVF_vect (void) __attribute__ ((signal, naked));
-void TIMER1_OVF_vect (void) {
+void WDT_vect (void) __attribute__ ((signal, naked));
+void WDT_vect (void) {
   if (MT_kernel.tasksRegistered > 0) {
     cli();
 
