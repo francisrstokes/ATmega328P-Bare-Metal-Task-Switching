@@ -1,5 +1,6 @@
 #include "kernel.h"
 #include "util.h"
+#include <string.h>
 
 void MT_kernel_init() {
   // Turn off interrupts until the kernel is started
@@ -49,10 +50,7 @@ void MT_register_task(struct MT_TaskDefinition* task) {
   // the stack memory is zeroed out.
   if (MT_kernel.tasksRegistered > 0) {
     MT_kernel.tasks[MT_kernel.tasksRegistered].sp -= SAVED_STATE_SIZE;
-    for (uint16_t i = MT_kernel.nextStackAddress; i > MT_kernel.nextStackAddress - SAVED_STATE_SIZE; i--) {
-      // Zero out the inital stack
-      *(uint8_t*)(i) = 0;
-    }
+    memset((void *)(MT_kernel.nextStackAddress - SAVED_STATE_SIZE), 0, SAVED_STATE_SIZE);
   }
 
   MT_kernel.tasksRegistered++;
