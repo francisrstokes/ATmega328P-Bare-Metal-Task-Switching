@@ -15,13 +15,18 @@ void MT_kernel_init() {
 
 void MT_kernel_start() {
   if (MT_kernel.tasksRegistered) {
-    uint16_t sp = MT_kernel.tasks[MT_kernel.activeTask].sp;
+    // Get the stack pointer of this task, but leave space to push a return address
+    uint16_t sp = MT_kernel.tasks[MT_kernel.activeTask].sp - sizeof(void *);
+    MT_sp_low = U16_TO_U8_L(sp);
+    MT_sp_high = U16_TO_U8_H(sp);
 
     __asm__ __volatile__ (
-      "pop __tmp_reg__        \n\t"   // Remove old return address
-      "pop __tmp_reg__        \n\t"   // Remove old return address
-      "push %[pcl]            \n\t"   // Push low byte to stack
-      "push %[pch]            \n\t"   // Push low byte to stack
+      "lds __tmp_reg__, MT_sp_low   \n\t" // Set the stack pointer
+      "out __SP_L__, __tmp_reg__    \n\t" // Set the stack pointer
+      "lds __tmp_reg__, MT_sp_high  \n\t" // Set the stack pointer
+      "out __SP_H__, __tmp_reg__    \n\t" // Set the stack pointer
+      "push %[pcl]                  \n\t" // Push low byte of pc to stack
+      "push %[pch]                  \n\t" // Push high byte of pc to stack
       : /* no outputs */
       : [pcl] "r"(U16_TO_U8_L(MT_kernel.tasks[MT_kernel.activeTask].pc))
       , [pch] "r"(U16_TO_U8_H(MT_kernel.tasks[MT_kernel.activeTask].pc))
