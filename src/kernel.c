@@ -97,10 +97,10 @@ void WDT_vect (void) {
     MT_pc_high = U16_TO_U8_H(MT_kernel.tasks[MT_kernel.activeTask].pc);
 
     MT_RESTORE_TASK_CTX();
-
-    // Enable interrupts
-    sei();
   }
+
+  // Enable interrupts
+  sei();
 
   reti();
 }
