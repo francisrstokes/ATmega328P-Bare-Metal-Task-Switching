@@ -67,8 +67,6 @@ void MT_register_task(struct MT_TaskDefinition* task) {
 void WDT_vect (void) __attribute__ ((signal, naked));
 void WDT_vect (void) {
   if (MT_kernel.tasksRegistered > 0) {
-    cli();
-
     // Save the current state
     MT_SAVE_TASK_CTX();
 
