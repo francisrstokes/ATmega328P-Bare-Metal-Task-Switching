@@ -1,9 +1,5 @@
 #include "util.h"
 #include "kernel.h"
-#include "uart.h"
-
-#include <avr/interrupt.h>
-#include <stddef.h>
 
 void task_blink_red() {
   DDRB |= _BV(DDB1);
@@ -49,9 +45,6 @@ int main (void) {
   // Turn off internal LED
   DDRB |= _BV(DDB5);
   PORTB &= ~_BV(PORTB5);
-
-  // Initialise UART for serial comms
-  UART_init();
 
   // Intitialise the multitasking kernel
   MT_kernel_init();
