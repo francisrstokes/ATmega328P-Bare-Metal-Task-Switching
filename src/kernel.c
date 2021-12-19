@@ -32,7 +32,7 @@ void MT_kernel_start() {
       , [pch] "r"(U16_TO_U8_H(MT_kernel.tasks[MT_kernel.activeTask].pc))
     );
 
-    // Enable interrupts
+  // Enable interrupts
     sei();
 
     // On return, control will transfer to the first task
@@ -71,14 +71,10 @@ void WDT_vect (void) {
     MT_SAVE_TASK_CTX();
 
     // Save this tasks PC
-    MT_kernel.tasks[MT_kernel.activeTask].pc = (
-      ((uint16_t)MT_pc_high << 8) | (uint16_t)(MT_pc_low)
-    );
+    MT_kernel.tasks[MT_kernel.activeTask].pc = U8S_T0_U16(MT_pc_low, MT_pc_high);
 
     // Save this tasks SP
-    MT_kernel.tasks[MT_kernel.activeTask].sp = (
-      ((uint16_t)MT_sp_high << 8) | (uint16_t)(MT_sp_low)
-    );
+    MT_kernel.tasks[MT_kernel.activeTask].sp = U8S_T0_U16(MT_sp_low, MT_sp_high);
 
     // Set up next task
     MT_kernel.activeTask += 1;
